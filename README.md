@@ -3,7 +3,7 @@
 [![Rust](https://img.shields.io/badge/Rust-Game-red)](https://rust.facepunch.com/)
 [![Umod](https://img.shields.io/badge/Umod-Framework-blue)](https://umod.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.35-brightgreen)](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.40-brightgreen)](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
 
 ## Overview
 
@@ -59,10 +59,20 @@ The plugin auto-generates a configuration file at `oxide/config/rAlwaysDay.json`
 
 ### How It Works
 
-1. **Monitor** - Plugin checks server time every minute
+1. **Monitor** - Plugin checks server time every minute via the `OnMinute` hook
 2. **Detect** - When the current time enters your configured window (e.g., 20:50-21:00)
-3. **Skip** - Server time instantly jumps to morning (e.g., 07:00 AM)
-4. **Repeat** - Cycle continues automatically each night
+3. **Skip Once** - Server time instantly jumps to the configured morning time (e.g., 07:00 AM) - **only happens once per cycle**
+4. **Reset** - Flag resets when the skip window closes, ready for the next night
+5. **Repeat** - Cycle continues automatically each night
+
+**Skip Timing Details:**
+- The skip occurs on the **first minute** the current time enters the window
+- Subsequent minutes in the same window do NOT trigger additional skips (prevents repeated jumps)
+- The flag resets once the window closes (after your end time)
+
+**Target Time Calculation:**
+- If your skip window is 20:50-21:00 and you set the target time to 07:00, the plugin jumps to the **next day's 07:00** if the current time is already past 07:00 today
+- This ensures the skip always moves time forward to morning, never backward
 
 ### Configuration Limitations
 
@@ -91,6 +101,23 @@ Both start and end times must be on the same calendar day. This keeps the logic 
 - **Automatic restart handling** - Survives server restarts and plugin reloads
 - **Clear error logging** - Easy troubleshooting
 
+### Startup Initialization
+
+When the plugin starts, it attempts to locate the `TOD_Sky` component (Rust's time-of-day system):
+- **Attempts**: Up to 50 tries with 3-second intervals between attempts
+- **Maximum wait time**: ~150 seconds (2.5 minutes)
+- **If found**: Plugin immediately begins monitoring the configured skip window
+- **If not found**: Plugin logs error and disables itself (will not function without TOD_Sky)
+
+This ensures the plugin properly initializes even if the game world takes time to fully load.
+
+### Configuration Behavior
+
+If your configuration file contains invalid time values (incorrect format or syntax):
+- **Fallback**: Plugin automatically reverts to default times (20:50, 21:00, 07:00)
+- **Logging**: An error message logs to the server console explaining the issue
+- **Continue**: Plugin still functions with defaults so your server stays working
+
 ## Troubleshooting
 
 ### Night is not skipping at configured time
@@ -117,11 +144,33 @@ After changes, reload the plugin: `oxide.reload rAlwaysDay`
 - Ensure Oxide/uMod framework is installed and running
 - Try manual reload: `oxide.reload rAlwaysDay`
 
+### Double skip when reloading during skip window
+
+**Issue**: If you reload the plugin (`oxide.reload rAlwaysDay`) while the server time is within the configured skip window, it may trigger an additional skip.
+
+**Explanation**: The plugin's skip-once flag resets when the plugin is reloaded. If you reload while in the window (e.g., 20:55), the flag resets and could trigger another skip on the next minute.
+
+**Solution**:
+- Reload the plugin outside of the skip window (not between your start and end times)
+- Or plan configuration changes for off-hours when skips don't occur
+- This is edge-case behavior and safe to ignore if reloads happen infrequently
+
 ## 📞 Support & Community
 
 - 🐛 **[Report Issues](https://github.com/FtuoilXelrash/rAlwaysDay/issues)** - Bug reports and feature requests
 - 💬 **[Discord Support](https://discord.gg/G8mfZH2TMp)** - Join our community for help and discussions
 - 📥 **[Download Latest](https://github.com/FtuoilXelrash/rAlwaysDay/releases)** - Always get the newest version
+
+## 🎮 Development & Testing Server
+
+**Darktidia Solo Only** - See rAlwaysDay and other custom plugins in action!
+
+All players are welcome to join our development server where plugins are tested and refined in a live environment.
+
+- **Server**: Darktidia Solo Only | Monthly | 2x | 50% Upkeep | No BP Wipes
+- **Find Server**: [View on BattleMetrics](https://www.battlemetrics.com/servers/rust/33277489)
+
+Experience the plugin live, test configurations, and provide feedback in a real gameplay setting.
 
 ## Contributing
 

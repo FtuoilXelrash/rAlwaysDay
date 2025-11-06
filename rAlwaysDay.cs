@@ -13,7 +13,7 @@ using Carbon.Base;
 
 namespace Oxide.Plugins
 {
-    [Info("rAlwaysDay", "Ftuoil Xelrash", "1.0.35")]
+    [Info("rAlwaysDay", "Ftuoil Xelrash", "1.0.40")]
     public class rAlwaysDay : RustPlugin
     {
         #region Fields
