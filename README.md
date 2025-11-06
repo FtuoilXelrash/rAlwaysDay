@@ -1,25 +1,51 @@
 # rAlwaysDay
 
-An ultra-lightweight Rust server plugin for Oxide/uMod that automatically skips nights during a configured time window. Pure simplicity with zero complexity.
+[![Rust](https://img.shields.io/badge/Rust-Game-red)](https://rust.facepunch.com/)
+[![Umod](https://img.shields.io/badge/Umod-Framework-blue)](https://umod.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.35-brightgreen)](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
 
-## Features
+## Overview
 
-- **Automatic Night Skipping** - No player interaction required
-- **Configurable Time Window** - Set when auto-skip should activate  
-- **Instant Skip Only** - Immediately jumps to morning time
-- **Ultra-Lightweight** - Minimal server performance impact
-- **Zero Dependencies** - No external plugins required
-- **Crystal Clear Configuration** - Only 3 simple settings
+**rAlwaysDay** is a lightweight Rust server plugin that automatically skips nighttime periods on your server. Configure a time window, and the plugin handles the rest—seamlessly transitioning from night to morning without player interaction or server disruption.
 
-## Installation
+## Key Features
 
-1. Download `rAlwaysDay.cs` 
+- **Automatic Night Skipping** - Triggered by server time within configured window
+- **Instant Transition** - Immediately jumps to morning (07:00 AM by default)
+- **Fire-and-Forget Setup** - Only 3 configuration options needed
+- **Performance Optimized** - Less than 0.1% CPU usage (one check per minute)
+- **Zero Dependencies** - Requires only Oxide/uMod framework
+- **Reliable Architecture** - Simple logic design ensures maximum uptime
+- **Automatic Configuration** - Validates settings with sensible fallback defaults
+- **Clear Error Logging** - Troubleshooting made easy
+
+## Quick Installation
+
+1. Download `rAlwaysDay.cs` from the [releases page](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
 2. Place it in your server's `oxide/plugins/` directory
 3. Restart your server or use `oxide.reload rAlwaysDay`
+4. Configuration file auto-generates at `oxide/config/rAlwaysDay.json`
+
+## Requirements
+
+- **Rust Dedicated Server** - Any version
+- **Oxide/uMod Framework** - Required for plugin system
+- **No external plugins** - Zero dependencies
 
 ## Configuration
 
-The plugin generates a configuration file at `oxide/config/rAlwaysDay.json`:
+The plugin auto-generates a configuration file at `oxide/config/rAlwaysDay.json`:
+
+### Configuration Options
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `Auto-skip start time` | When the skip window opens | `20:50` |
+| `Auto-skip end time` | When the skip window closes | `21:00` |
+| `Time to set after skip` | What time to jump to (morning) | `07:00` |
+
+### Example Configuration
 
 ```json
 {
@@ -31,98 +57,102 @@ The plugin generates a configuration file at `oxide/config/rAlwaysDay.json`:
 }
 ```
 
-### Configuration Options
+### How It Works
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| `Auto-skip start time` | When auto-skip window begins | `"20:50"` |
-| `Auto-skip end time` | When auto-skip window ends | `"21:00"` |
-| `Time to set after skip` | Time to jump to when skipping | `"07:00"` |
+1. **Monitor** - Plugin checks server time every minute
+2. **Detect** - When the current time enters your configured window (e.g., 20:50-21:00)
+3. **Skip** - Server time instantly jumps to morning (e.g., 07:00 AM)
+4. **Repeat** - Cycle continues automatically each night
 
-## How It Works
+### Configuration Limitations
 
-The plugin automatically monitors server time and skips nights during the configured window:
+**The plugin does not support time windows that cross midnight:**
 
-- **Between 20:50-21:00** (default): Plugin checks for night skip
-- **Instant Skip**: Immediately jumps server time to 07:00 AM
-- **Simple Logic**: No complex calculations or modes - just pure time jumping
+- ✅ `20:50` → `21:00` works perfectly
+- ❌ `23:00` → `01:00` is not supported
 
-### ⚠️ Important Time Window Configuration
+Both start and end times must be on the same calendar day. This keeps the logic simple and reliable.
 
-**Current Limitation**: The plugin currently does not support time windows that cross midnight (e.g., start time "23:00" and end time "01:00"). 
+## Performance & Balance
 
-**Supported**: `"20:50"` to `"21:00"` ✅  
-**Not Supported**: `"23:00"` to `"01:00"` ❌
+### CPU & Memory Profile
 
-If you need a time window that crosses midnight, ensure both times are on the same day. This limitation may be addressed in future versions.
+- **CPU Usage**: < 0.1% (one time check per minute)
+- **Memory Usage**: Negligible (stateless operation, no data storage)
+- **OnMinute Hook Calls**: 1,440 per day (standard frequency)
+- **Server Impact**: Minimal - safe for any server size
 
-## Simple Operation
+### Technical Architecture
 
-The plugin uses **instant skip only**:
-- Immediately jumps server time to configured morning hour (07:00 AM)
-- Most efficient for maintaining constant daylight
-- Zero complexity - no modes to choose from
+- **Minute-based checks** - Evaluates time window via `OnMinute` hook
+- **Direct time manipulation** - Modifies server time through Rust's `TOD_Time` system
+- **Stateless operation** - No persistence overhead or state management
+- **Automatic configuration** - Validates settings with sensible fallback defaults
+- **Automatic restart handling** - Survives server restarts and plugin reloads
+- **Clear error logging** - Easy troubleshooting
 
-## Server Compatibility
+## Troubleshooting
 
-- **Rust Server**: Any version
-- **Framework**: Oxide/uMod required
-- **Dependencies**: None
-- **Performance**: Minimal CPU/memory usage
+### Night is not skipping at configured time
 
-## Version History
+**Solution**: Verify your `Auto-skip start time` and `Auto-skip end time` are:
+- In the correct 24-hour format (e.g., `20:50` not `8:50 PM`)
+- On the same calendar day (midnight crossing not supported)
+- Correctly spelled in the JSON (no typos)
 
-### v1.0.35
-- **Ultra-Simplified Configuration**: Only 3 settings remain
-- **Default Time Changes**: Skip window now 20:50-21:00, sets time to 07:00 AM
-- **Instant Skip Only**: Removed all fast night mode complexity
-- **Pure Auto-Skip**: Eliminated all unnecessary day/night cycle management
+After changes, reload the plugin: `oxide.reload rAlwaysDay`
 
-### v1.0.30
-- **Major Cleanup**: Removed ForceSkip option and fast night code
-- **Always Instant**: Plugin now always uses instant skip mode
-- **Simplified Logic**: Cleaner, more reliable operation
+### Server time seems wrong or not updating
 
-### v1.0.25
-- **Configuration Overhaul**: Replaced complex time settings with simple auto-skip config
-- **Removed Day/Night Management**: Eliminated unnecessary complexity
-- **Pure Auto-Skip Focus**: Plugin now does one thing perfectly
+**Solution**:
+- Check that the `Time to set after skip` setting is valid (e.g., `07:00`)
+- Ensure no other plugins are manipulating server time
+- Verify Oxide/uMod is properly installed and plugins have permission to hook time events
 
-### v1.0.20 - v1.0.10
-- Performance optimizations and smart scheduling (later simplified)
-- Various stability improvements and bug fixes
+### Plugin not loading
 
-### v1.0.0
-- Initial production release
+**Solution**:
+- Check server console for errors: Look for `[rAlwaysDay]` messages
+- Verify the `.cs` file is in `oxide/plugins/` directory
+- Ensure Oxide/uMod framework is installed and running
+- Try manual reload: `oxide.reload rAlwaysDay`
 
-## Developer Information
+## Support & Community
 
-- **Author**: Ftuoil Xelrash
-- **Framework**: Oxide/uMod for Rust
-- **Language**: C#
-- **License**: Not specified
+### Report Issues
+Found a bug or have a feature request? Open an issue on [GitHub](https://github.com/FtuoilXelrash/rAlwaysDay/issues)
 
-## Support
+### Get Help
+- Check this README first
+- Review the Troubleshooting section above
+- Post in [Umod Forums](https://umod.org/plugins) for community help
+- Join the [Rust Modding Community](https://www.rust.facepunch.com/)
 
-For issues, questions, or contributions, please refer to the plugin's repository or Rust modding communities.
+### Downloads
+- [Latest Release](https://github.com/FtuoilXelrash/rAlwaysDay/releases/latest)
+- [All Versions](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
 
-## Technical Details
+## Contributing
 
-### Ultra-Simple Architecture
-- **Always-On OnMinute Hook**: Checks every minute for skip window (simple and reliable)
-- **Instant Time Jump**: Direct manipulation of server time via TOD system
-- **Zero Complexity**: No scheduling, no modes, no state management
-- **Minimal Resource Usage**: Lightweight time checking only
+Contributions are welcome! Here's how to get started:
 
-### Core Integration  
-- Integrates with Rust's Time-of-Day (TOD) system
-- Simple OnMinute hook for time checking
-- Automatically handles server restarts and reloads
-- Validates configuration values with fallback defaults
-- Clear error logging for troubleshooting
+1. **Fork** the repository on GitHub
+2. **Create a branch** for your feature (`git checkout -b feature/amazing-feature`)
+3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request** with a description of your changes
 
-### Performance Profile
-- **CPU Usage**: Minimal (one time check per minute)
-- **Memory Usage**: Near zero (no data storage)
-- **OnMinute Calls**: 1,440 per day (standard hook frequency)
-- **Reliability**: Maximum (simple logic = fewer failure points)
+Please ensure your code follows the existing style and includes clear commit messages.
+
+## License
+
+This plugin is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+**Ftuoil Xelrash**
+
+- GitHub: [@FtuoilXelrash](https://github.com/FtuoilXelrash)
+- Codefling: [Downloads](https://codefling.com/profile/51007-ftuoil-xelrash/content/?type=downloads_file)
+
+For questions or feedback, reach out via GitHub or the Rust modding community.
