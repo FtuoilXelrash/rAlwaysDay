@@ -159,6 +159,7 @@ namespace Oxide.Plugins
 
             private uint componentSearchAttempts;
             private TOD_Time timeComponent;
+            private bool hasSkippedThisCycle;
             private TimeSpan CurrentTime => TOD_Sky.Instance.Cycle.DateTime.TimeOfDay;
 
             #endregion
@@ -223,12 +224,22 @@ namespace Oxide.Plugins
             public void OnMinute()
             {
                 var currentTime = CurrentTime;
+                bool inSkipWindow = currentTime >= _config.AutoSkip.StartTimeSpan &&
+                                    currentTime < _config.AutoSkip.EndTimeSpan;
 
-                // Check auto-skip window
-                if (currentTime >= _config.AutoSkip.StartTimeSpan &&
-                    currentTime < _config.AutoSkip.EndTimeSpan)
+                if (inSkipWindow)
                 {
-                    ForceDayTime();
+                    // Only skip once per cycle
+                    if (!hasSkippedThisCycle)
+                    {
+                        ForceDayTime();
+                        hasSkippedThisCycle = true;
+                    }
+                }
+                else
+                {
+                    // Reset flag when outside skip window
+                    hasSkippedThisCycle = false;
                 }
             }
 
