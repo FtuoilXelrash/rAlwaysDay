@@ -117,20 +117,11 @@ After changes, reload the plugin: `oxide.reload rAlwaysDay`
 - Ensure Oxide/uMod framework is installed and running
 - Try manual reload: `oxide.reload rAlwaysDay`
 
-## Support & Community
+## 📞 Support & Community
 
-### Report Issues
-Found a bug or have a feature request? Open an issue on [GitHub](https://github.com/FtuoilXelrash/rAlwaysDay/issues)
-
-### Get Help
-- Check this README first
-- Review the Troubleshooting section above
-- Post in [Umod Forums](https://umod.org/plugins) for community help
-- Join the [Rust Modding Community](https://www.rust.facepunch.com/)
-
-### Downloads
-- [Latest Release](https://github.com/FtuoilXelrash/rAlwaysDay/releases/latest)
-- [All Versions](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
+- 🐛 **[Report Issues](https://github.com/FtuoilXelrash/rAlwaysDay/issues)** - Bug reports and feature requests
+- 💬 **[Discord Support](https://discord.gg/G8mfZH2TMp)** - Join our community for help and discussions
+- 📥 **[Download Latest](https://github.com/FtuoilXelrash/rAlwaysDay/releases)** - Always get the newest version
 
 ## Contributing
 

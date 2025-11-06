@@ -140,22 +140,14 @@ Solution:
 SUPPORT & COMMUNITY
 ===============================================================================
 
-REPORT ISSUES:
+* Report Issues - https://github.com/FtuoilXelrash/rAlwaysDay/issues
+  Bug reports and feature requests
 
-Found a bug or have a feature request? Open an issue on GitHub:
-https://github.com/FtuoilXelrash/rAlwaysDay/issues
+* Discord Support - https://discord.gg/G8mfZH2TMp
+  Join our community for help and discussions
 
-GET HELP:
-
-* Check this README first
-* Review the Troubleshooting section above
-* Post in Umod Forums for community help: https://umod.org/plugins
-* Join the Rust Modding Community: https://www.rust.facepunch.com/
-
-DOWNLOADS:
-
-* Latest Release: https://github.com/FtuoilXelrash/rAlwaysDay/releases/latest
-* All Versions: https://github.com/FtuoilXelrash/rAlwaysDay/releases
+* Download Latest - https://github.com/FtuoilXelrash/rAlwaysDay/releases
+  Always get the newest version
 
 ===============================================================================
 CONTRIBUTING
