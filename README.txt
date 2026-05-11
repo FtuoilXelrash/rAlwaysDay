@@ -1,14 +1,14 @@
 ===============================================================================
-                                rAlwaysDay
+                             Rust Always Day
 ===============================================================================
 
-Rust Game | Umod Framework | MIT License | v1.0.40
+Rust Game | Umod Framework | MIT License | v1.0.42
 
 ===============================================================================
 OVERVIEW
 ===============================================================================
 
-rAlwaysDay is a lightweight Rust server plugin that automatically skips
+Rust Always Day is a lightweight Rust server plugin that automatically skips
 nighttime periods on your server. Configure a time window, and the plugin
 handles the rest—seamlessly transitioning from night to morning without
 player interaction or server disruption.

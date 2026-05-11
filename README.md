@@ -1,13 +1,13 @@
-# rAlwaysDay
+# Rust Always Day
 
 [![Rust](https://img.shields.io/badge/Rust-Game-red)](https://rust.facepunch.com/)
 [![Umod](https://img.shields.io/badge/Umod-Framework-blue)](https://umod.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.40-brightgreen)](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.42-brightgreen)](https://github.com/FtuoilXelrash/rAlwaysDay/releases)
 
 ## Overview
 
-**rAlwaysDay** is a lightweight Rust server plugin that automatically skips nighttime periods on your server. Configure a time window, and the plugin handles the rest—seamlessly transitioning from night to morning without player interaction or server disruption.
+**Rust Always Day** is a lightweight Rust server plugin that automatically skips nighttime periods on your server. Configure a time window, and the plugin handles the rest—seamlessly transitioning from night to morning without player interaction or server disruption.
 
 ## Key Features
 
